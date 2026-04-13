@@ -1,0 +1,19 @@
+### TEST GET / WEBSITE
+GET http://localhost:2425
+
+### TEST GET /dashboard WEBSITE
+GET http://localhost:2425/dashboard
+
+### DATA ENDPOINT
+GET http://localhost:2425/api/data
+
+### DATA ENDPOINT FOR ADDING A USER
+POST http://localhost:2425/api/data
+Content-Type: application/json
+
+{
+    "name": "margu"
+}
+
+### DELETE ENDPOINT
+DELETE http://localhost:2425/api/data
