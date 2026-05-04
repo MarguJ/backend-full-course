@@ -70,7 +70,7 @@ router.post("/login", (req, res) => {
     });
     res.json({ token });
   } catch (err) {
-    console.log(error.message);
+    console.log(err.message);
     res.sendStatus(503);
   }
 });
