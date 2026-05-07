@@ -34,7 +34,7 @@ router.post("/register", (req, res) => {
     const token = jwt.sign(
       { id: result.lastInsertRowid },
       process.env.JWT_SECRET,
-      { expiresIn: "24h" },
+      { expiresIn: "1h" },
     );
     res.json({ token });
   } catch (err) {
@@ -66,7 +66,7 @@ router.post("/login", (req, res) => {
     console.log(user);
     // Then we have a successful authentication
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "24h",
+      expiresIn: "1h",
     });
     res.json({ token });
   } catch (err) {

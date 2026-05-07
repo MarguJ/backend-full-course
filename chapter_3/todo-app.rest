@@ -2,7 +2,7 @@
 GET http://localhost:5000
 
 ### Register a user POST /auth/register
-POST http://localhost:5000/auth/register
+POST http://localhost:5000/auth/register 
 Content-Type: application/json
 
 {
@@ -17,4 +17,17 @@ Content-Type: application/json
 {
     "username": "loucim.facundo@gmail.com",
     "password": "nigga-nigga.nigga"
+}
+
+### Fetch all todos GET /todos (protected)
+GET http://localhost:5000/todos
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzc4MTYwNjI1LCJleHAiOjE3NzgxNjQyMjV9.u7s7QOZKkN0CX1mQ4AHO7F_7pmxhjvCB5xjikd5H-f0
+
+### Create a new todo POST /todos (protected)
+POST http://localhost:5000/todos
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzc4MTYwNjI1LCJleHAiOjE3NzgxNjQyMjV9.u7s7QOZKkN0CX1mQ4AHO7F_7pmxhjvCB5xjikd5H-f0
+Content-Type: application/json
+
+{
+    "task": "Finish the projects"
 }
