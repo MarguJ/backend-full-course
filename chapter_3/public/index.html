@@ -308,7 +308,7 @@
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify({ task }),
+        body: JSON.stringify({ task: task }),
       });
       todoInput.value = "";
       fetchTodos();
