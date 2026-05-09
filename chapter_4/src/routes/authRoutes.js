@@ -1,12 +1,12 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import db from "../db.js";
+import prisma from "../prismaClient.js";
 
 const router = express.Router();
 
 // Register a new user endpoint /auth/register
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
   const { username, password } = req.body;
   // Save the username and an irreversibly encrypted password
   // Save loucim.facundo@gmail.com / qhdwuidhasuiodywq789e6qw89d70qwyd78wgq78dg78asg
@@ -16,26 +16,26 @@ router.post("/register", (req, res) => {
 
   // Save the new user and hashed password to the db
   try {
-    const insertUser = db.prepare(
-      `INSERT INTO users (username, password)
-      VALUES (?, ?)`,
-    );
-    const result = insertUser.run(username, hashedPassword);
+    const user = await prisma.user.create({
+      data: {
+        username,
+        password: hashedPassword,
+      },
+    });
 
     // Now that we have an user i want to add thair first todo for them
     const defaultTodo = `Hello :) Add your first todo!`;
-    const insertTodo = db.prepare(
-      `INSERT INTO todos (user_id, task)
-      VALUES (?, ?)`,
-    );
-    insertTodo.run(result.lastInsertRowid, defaultTodo);
+    await prisma.todo.create({
+      data: {
+        task: defaultTodo,
+        userId: user.id,
+      },
+    });
 
     // Create a token
-    const token = jwt.sign(
-      { id: result.lastInsertRowid },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" },
-    );
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
     res.json({ token });
   } catch (err) {
     console.log(err.message);
@@ -43,15 +43,18 @@ router.post("/register", (req, res) => {
   }
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   // We get their email, and we look up the password associated with that email in the database
   // But we get it back and see it's excrypted, which means that we cannot compare it to the one the user just used trying to log in
   // So what we have to do, is again, one way encrypt the password the user just entered
   const { username, password } = req.body;
 
   try {
-    const getUser = db.prepare("SELECT * FROM users WHERE username = ?");
-    const user = getUser.get(username);
+    const user = await prisma.user.findUnique({
+      where: {
+        username: username,
+      },
+    });
 
     // If we cannot find a user associated with that username, return out the function
     if (!user) {
